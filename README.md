@@ -7,7 +7,7 @@
 In the world of Javac AST hacking, there tends to be a large amount of boilerplate exclusive to creating the processors.<br>
 Processors are also just not meant to perform such a thing, and as such, aren't decided to do so cleanly.
 
-Lucent aims to fix that by offering well-documented, easy-to-use classes that offer tons of potential while being easy to maintain and create.
+Lucent aims to fix that by offering well-documented, easy-to-use classes that offer tons of potential while being easy to maintain and create. It's also only *8 KB!*
 
 *See also: [Eureka](https://github.com/project-transparent/eureka)*
 
