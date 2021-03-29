@@ -9,6 +9,8 @@ Processors are also just not meant to perform such a thing, and as such, aren't 
 
 Lucent aims to fix that by offering well-documented, easy-to-use classes that offer tons of potential while being easy to maintain and create.
 
+*See also: [Eureka](https://github.com/project-transparent/eureka)*
+
 ## Primary Classes
 
 ### Processor
