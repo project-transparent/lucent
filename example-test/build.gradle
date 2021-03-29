@@ -10,6 +10,6 @@ archivesBaseName = 'lucent-example-test'
 version = '1.0.0'
 
 dependencies {
-    compileOnly project(':example')
+    compile project(':example')
     annotationProcessor project(':example')
 }

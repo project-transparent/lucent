@@ -1,3 +1,5 @@
+package org.transparent.lucent.example.test;
+
 import org.transparent.lucent.example.Example;
 
 @Example

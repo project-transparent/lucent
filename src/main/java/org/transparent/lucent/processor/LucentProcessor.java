@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  */
 public abstract class LucentProcessor extends AbstractProcessor {
     private final Set<TypeKind> kinds;
-    private final LucentTranslator translator;
+    private LucentTranslator translator;
 
     protected Trees trees;
     protected Context context;
@@ -56,7 +56,6 @@ public abstract class LucentProcessor extends AbstractProcessor {
      */
     public LucentProcessor() {
         kinds = getSupportedTypeKinds();
-        translator = getTranslator();
     }
 
     @Override
@@ -67,6 +66,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 .getContext();
         factory = TreeMaker.instance(context);
         names = Names.instance(context);
+        translator = getTranslator();
     }
 
     /**
@@ -102,6 +102,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 if (translator != null)
                     translator.translate(tree, element);
                 postTranslate(tree, element, translator);
+                continue;
             }
             notSupported(element);
         }

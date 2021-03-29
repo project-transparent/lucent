@@ -21,12 +21,13 @@ public final class ExampleTranslator extends LucentTranslator {
             final JCClassDecl clazz = (JCClassDecl) tree;
             clazz.defs = clazz.defs
                     .append(field());
+            result = clazz;
         }
     }
 
     private JCVariableDecl field() {
         final JCModifiers mods = factory.Modifiers(
-                Flags.PRIVATE & Flags.FINAL);
+                Flags.PRIVATE | Flags.FINAL);
         final Name name = names.fromString("generated");
         final JCExpression type = factory.Ident(
                 names.fromString("String"));
