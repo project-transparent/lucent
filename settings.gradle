@@ -1,0 +1,5 @@
+rootProject.name = 'lucent'
+include 'example'
+include 'lucent-example-test'
+include 'example-test'
+

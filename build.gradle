@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+    id 'maven'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+group = 'org.transparent'
+archivesBaseName = 'lucent'
+version = '1.0.0'
+
+dependencies {
+    compile files("${System.properties['java.home']}/../lib/tools.jar")
+}
