@@ -13,6 +13,6 @@ version = '1.0.0'
 mainClassName = 'org.transparent.lucent.example.test.Test'
 
 dependencies {
-    implementation project(':example')
-    annotationProcessor project(':example')
+    implementation project(':example-java-9')
+    annotationProcessor project(':example-java-9')
 }
