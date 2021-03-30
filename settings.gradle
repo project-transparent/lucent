@@ -1,4 +1,12 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'lucent'
 include 'example'
+include 'example-java-9'
 include 'example-test'
-
+include 'example-test-java-9'
