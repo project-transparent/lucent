@@ -12,7 +12,7 @@ Lucent aims to fix that by offering well-documented, easy-to-use classes that of
 *See also: [Eureka](https://github.com/project-transparent/eureka)*
 
 ### Requirements
-Lucent requires JDK 8 and is incompatible with later versions of Java, as later versions no longer have the required `tools.jar` dependency from the JDK.
+Lucent is designed to use JDK 8 but supports later versions, such versions may be unstable with this project at the moment.
 
 ## Primary Classes
 
