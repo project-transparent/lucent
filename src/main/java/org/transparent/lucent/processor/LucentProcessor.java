@@ -144,6 +144,17 @@ public abstract class LucentProcessor extends AbstractProcessor {
     protected void notSupported(Element element) {}
 
     /**
+     * Returns a single type kind that this processor supports.
+     * <p>
+     * This is turned into a singleton set for the {@link #getSupportedTypeKinds()} method.
+     *
+     * @return a supported type kind
+     */
+    public TypeKind getSupportedTypeKind() {
+        return TypeKind.CLASS;
+    }
+
+    /**
      * Returns the type kinds that this processor supports.
      * <p>
      * Any non-matching types are discarded during processing.
@@ -151,7 +162,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
      * @return a set of supported type kinds
      */
     public Set<TypeKind> getSupportedTypeKinds() {
-        return Collections.singleton(TypeKind.CLASS);
+        return Collections.singleton(getSupportedTypeKind());
     }
 
     /**
