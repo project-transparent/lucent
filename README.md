@@ -40,6 +40,6 @@ A new validator can be created by extending [`LucentBaseValidator`](https://gith
 ## Installation (Gradle - Local)
 
 1. Clone the repo (https://github.com/project-transparent/lucent).
-2. Run `gradlew publishToLocalMaven` in the root directory of the repo.
+2. Run `gradlew publishToMavenLocal` in the root directory of the repo.
 3. Add `mavenLocal()` to your repositories.
 4. Add `implementation 'org.transparent:lucent:<version>'` to your dependencies.
