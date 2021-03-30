@@ -1,4 +1,4 @@
-<img src="https://github.com/project-transparent/lucent/blob/main/lucent.png" alt="Lucent"/>
+<img src="https://github.com/project-transparent/lucent/blob/main/logo.png" alt="Lucent"/>
 
 **Lucent** is a framework for creating simplistic AST-transforming annotation processors.
 
