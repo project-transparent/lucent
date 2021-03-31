@@ -19,8 +19,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.Set;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -102,10 +102,26 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 if (translator != null)
                     translator.translate(tree, element);
                 postTranslate(tree, element, translator);
-                continue;
             }
-            notSupported(element);
         }
+        return false;
+    }
+
+    /**
+     * Called by {@link #process(RoundEnvironment)} to confirm validity of an element's kind.
+     * <p>
+     * This method has to convert the element kind to a type kind to check equality.
+     *
+     * @param kind the element kind of a root element
+     * @return whether or not this element kind is supported
+     */
+    private boolean supported(ElementKind kind) {
+        final TypeKind type = TypeKind
+                .valueOf(kind)
+                .orElse(null);
+        if (type != null)
+            return kinds
+                    .contains(type);
         return false;
     }
 
@@ -136,51 +152,17 @@ public abstract class LucentProcessor extends AbstractProcessor {
     protected void postTranslate(JCTree tree, Element element, LucentTranslator translator) {}
 
     /**
-     * Called when an element's kind doesn't match {@link #getSupportedTypeKinds()}
-     *
-     * @param element the invalid element
-     */
-    @Hook
-    protected void notSupported(Element element) {}
-
-    /**
-     * Returns a single type kind that this processor supports.
-     * <p>
-     * This is turned into a singleton set for the {@link #getSupportedTypeKinds()} method.
-     *
-     * @return a supported type kind
-     */
-    public TypeKind getSupportedTypeKind() {
-        return TypeKind.CLASS;
-    }
-
-    /**
      * Returns the type kinds that this processor supports.
+     * When a root element is found, if its kind is not in this list, it is skipped.
      * <p>
-     * Any non-matching types are discarded during processing.
+     * This method returns all type kinds by default.
      *
      * @return a set of supported type kinds
      */
     public Set<TypeKind> getSupportedTypeKinds() {
-        return Collections.singleton(getSupportedTypeKind());
-    }
-
-    /**
-     * Called by {@link #process(RoundEnvironment)} to confirm validity of an element's kind.
-     * <p>
-     * This method has to convert the element kind to a type kind to check equality.
-     *
-     * @param kind the element kind of a root element
-     * @return whether or not this element kind is supported
-     */
-    private boolean supported(ElementKind kind) {
-        final TypeKind type = TypeKind
-                .valueOf(kind)
-                .orElse(null);
-        if (type != null)
-            return kinds
-                    .contains(type);
-        return false;
+        final Set<TypeKind> types = new HashSet<>();
+        Collections.addAll(types, TypeKind.values());
+        return types;
     }
 
     /**

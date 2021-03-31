@@ -3,6 +3,7 @@ package org.transparent.lucent.transform;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.tree.TreeTranslator;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import org.transparent.lucent.processor.LucentProcessor;
@@ -58,7 +59,7 @@ public abstract class LucentTranslator extends TreeTranslator {
     /**
      * Where the {@link JCTree} transformations occur.
      *
-     * @param tree an instance of {@code JCTree} representing a root element
+     * @param tree the target {@code JCTree}
      * @param element the {@link Element} associated with this tree
      */
     public abstract void translate(JCTree tree, Element element);
