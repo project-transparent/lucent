@@ -104,8 +104,12 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 final JCTree tree = (JCTree) trees.getTree(element);
                 preTranslate(tree, element, translator);
                 if (translator != null)
-                    new FilteringTranslator(getSupportedAnnotations(), translator)
-                            .filter(tree);
+                    if (filterTrees()) {
+                        new FilteringTranslator(getSupportedAnnotations(), translator)
+                                .filter(tree);
+                    } else {
+                        tree.accept(translator);
+                    }
                 postTranslate(tree, element, translator);
             }
         }
@@ -166,6 +170,11 @@ public abstract class LucentProcessor extends AbstractProcessor {
      */
     public Set<TypeKind> getSupportedTypeKinds() {
         return hashSetOf(TypeKind.values());
+    }
+
+    // TODO: Document method
+    public boolean filterTrees() {
+        return true;
     }
 
     /**
