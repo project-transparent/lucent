@@ -8,7 +8,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 group = 'org.transparent'
 archivesBaseName = 'lucent'
-version = '1.0.1'
+version = '1.1.0'
 
 diamond {
     autoMavenPublish = true
