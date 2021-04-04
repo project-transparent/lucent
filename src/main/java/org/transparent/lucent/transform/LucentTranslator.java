@@ -16,7 +16,7 @@ import javax.lang.model.element.Element;
  * These are usually instantiated by {@link LucentProcessor} and are called when a valid element
  * has been processed and is able to be transformed.
  * <p>
- * The processor's filtering is lightweight however, and as such, this class provides access to a
+ * The processor's filtering is lightweight however, and as such, is provided access to a
  * {@link LucentValidator} which allows individual types of {@code JCTree}s to be validated based on the
  * implementation of the validator.
  *
@@ -37,31 +37,10 @@ public abstract class LucentTranslator extends TreeTranslator {
      * @param names an instance of {@code Names} that can be used to get instances of {@link Name}
      * @param factory an instance of {@code TreeMaker} that allows for transformation of trees
      */
-    public LucentTranslator(Names names, TreeMaker factory) {
-        this.validator = getValidator();
+    public LucentTranslator(Names names, TreeMaker factory, LucentValidator validator) {
         this.names = names;
         this.factory = factory;
+        this.validator = validator;
     }
-
-    /**
-     * Returns the validator associated with this translator.
-     * <p>
-     * If necessary, it's possible to use this to have
-     * dynamic validation set up for your processor as the {@link #validator}
-     * field of all translators is mutable.
-     *
-     * @return the associated {@link LucentValidator}
-     */
-    protected LucentValidator getValidator() {
-        return null;
-    }
-
-    /**
-     * Where the {@link JCTree} transformations occur.
-     *
-     * @param tree the target {@code JCTree}
-     * @param element the {@link Element} associated with this tree
-     */
-    public abstract void translate(JCTree tree, Element element);
 }
 

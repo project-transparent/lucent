@@ -8,6 +8,8 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Names;
 import org.transparent.lucent.transform.LucentTranslator;
 import org.transparent.lucent.transform.LucentValidator;
+import org.transparent.lucent.util.FilteringTranslator;
+import org.transparent.lucent.util.TriFunction;
 import org.transparent.lucent.util.TypeKind;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -19,17 +21,17 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+
+import static org.transparent.lucent.util.CollectionsUtil.*;
 
 /**
  * A wrapper around {@link AbstractProcessor} that allows for cleaner AST modification.
  * <p>
  * This processor will process root elements,
  * skip the ones that aren't supported by the processor,
- * and invoke {@link LucentTranslator#translate(JCTree, Element)} on them.
+ * and visit the root elements' trees via {@link JCTree#accept(JCTree.Visitor)}.
  * <p>
  * It is up to the associated {@link LucentTranslator}
  * specified by {@link #getTranslator()} to filter and transform trees obtained from
@@ -45,6 +47,7 @@ import java.util.stream.Collectors;
 public abstract class LucentProcessor extends AbstractProcessor {
     private final Set<TypeKind> kinds;
     private LucentTranslator translator;
+    private LucentValidator validator;
 
     protected Trees trees;
     protected Context context;
@@ -67,6 +70,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
         factory = TreeMaker.instance(context);
         names = Names.instance(context);
         translator = getTranslator();
+        validator = getValidator();
     }
 
     /**
@@ -100,7 +104,8 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 final JCTree tree = (JCTree) trees.getTree(element);
                 preTranslate(tree, element, translator);
                 if (translator != null)
-                    translator.translate(tree, element);
+                    new FilteringTranslator(getSupportedAnnotations(), translator)
+                            .filter(tree);
                 postTranslate(tree, element, translator);
             }
         }
@@ -160,9 +165,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
      * @return a set of supported type kinds
      */
     public Set<TypeKind> getSupportedTypeKinds() {
-        final Set<TypeKind> types = new HashSet<>();
-        Collections.addAll(types, TypeKind.values());
-        return types;
+        return hashSetOf(TypeKind.values());
     }
 
     /**
@@ -182,6 +185,17 @@ public abstract class LucentProcessor extends AbstractProcessor {
     }
 
     /**
+     * Returns the validator associated with this processor.
+     * <p>
+     * An instance of this is passed to the translator.
+     *
+     * @return the associated {@link LucentValidator}
+     */
+    public LucentValidator getValidator() {
+        return null;
+    }
+
+    /**
      * Returns an instance of {@link LucentTranslator} based on the fields of this processor.
      * <p>
      * This method isn't preferable if you add more parameters to the constructor of your translator,
@@ -191,9 +205,10 @@ public abstract class LucentProcessor extends AbstractProcessor {
      * @return an instance of {@code LucentTranslator}
      */
     protected LucentTranslator translator(
-            BiFunction<Names, TreeMaker,
+            TriFunction<Names, TreeMaker,
+                    LucentValidator,
                     LucentTranslator> constructor) {
-        return constructor.apply(names, factory);
+        return constructor.apply(names, factory, validator);
     }
 
     /**

@@ -7,22 +7,21 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import org.transparent.lucent.transform.LucentTranslator;
+import org.transparent.lucent.transform.LucentValidator;
 
 import javax.lang.model.element.Element;
 
 public final class ExampleTranslator extends LucentTranslator {
-    public ExampleTranslator(Names names, TreeMaker factory) {
-        super(names, factory);
+    public ExampleTranslator(Names names, TreeMaker factory, LucentValidator validator) {
+        super(names, factory, validator);
     }
 
     @Override
-    public void translate(JCTree tree, Element element) {
-        if (tree instanceof JCClassDecl) {
-            final JCClassDecl clazz = (JCClassDecl) tree;
-            clazz.defs = clazz.defs
-                    .append(field());
-            result = clazz;
-        }
+    public void visitClassDef(JCClassDecl tree) {
+        super.visitClassDef(tree);
+        tree.defs = tree.defs
+                .append(field());
+        result = tree;
     }
 
     private JCVariableDecl field() {
