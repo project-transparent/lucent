@@ -95,7 +95,8 @@ public abstract class LucentProcessor extends AbstractProcessor {
                     preTranslate(tree, element, translator);
                     if (filterTrees()) {
                         new FilteringTranslator(translator,
-                                getFilterValidator(getSupportedAnnotations())
+                                getFilterValidator(getSupportedAnnotations()),
+                                filterMembers()
                         ).filter(tree);
                     } else {
                         tree.accept(translator);
@@ -167,6 +168,11 @@ public abstract class LucentProcessor extends AbstractProcessor {
 
     // TODO: Document method
     public boolean filterTrees() {
+        return true;
+    }
+
+    // TODO: Document method
+    public boolean filterMembers() {
         return true;
     }
 

@@ -2,7 +2,7 @@ package org.transparent.lucent.util.filter;
 
 import com.sun.tools.javac.tree.JCTree;
 import org.transparent.lucent.transform.LucentBaseValidator;
-import org.transparent.lucent.util.TriState;
+import org.transparent.lucent.util.State;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -11,21 +11,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.sun.tools.javac.tree.JCTree.*;
-import static org.transparent.lucent.util.TriState.*;
+import static org.transparent.lucent.util.State.*;
 
 // TODO: Document methods
 public class FilteringValidator extends LucentBaseValidator {
     private final Set<String> annotations;
-    private final TriState anyDefault;
-    private final TriState classDefault;
-    private final TriState methodDefault;
-    private final TriState fieldDefault;
+    private final State anyDefault;
+    private final State classDefault;
+    private final State methodDefault;
+    private final State fieldDefault;
 
     public FilteringValidator(Set<Class<? extends Annotation>> annotations,
-                              TriState anyDefault,
-                              TriState classDefault,
-                              TriState methodDefault,
-                              TriState fieldDefault) {
+                              State anyDefault,
+                              State classDefault,
+                              State methodDefault,
+                              State fieldDefault) {
         this.annotations = annotations
                 .stream()
                 .map(Class::getCanonicalName)
@@ -77,10 +77,10 @@ public class FilteringValidator extends LucentBaseValidator {
 
     public static final class Builder {
         private final Set<Class<? extends Annotation>> annotations = new HashSet<>();
-        private TriState anyDefault = NONE;
-        private TriState classDefault = NONE;
-        private TriState methodDefault = NONE;
-        private TriState fieldDefault = NONE;
+        private State anyDefault = NONE;
+        private State classDefault = NONE;
+        private State methodDefault = NONE;
+        private State fieldDefault = NONE;
 
         @SafeVarargs
         public final Builder annotations(Class<? extends Annotation>... annotations) {
@@ -93,22 +93,22 @@ public class FilteringValidator extends LucentBaseValidator {
             return this;
         }
 
-        public Builder anyDefault(TriState anyDefault) {
+        public Builder anyDefault(State anyDefault) {
             this.anyDefault = anyDefault;
             return this;
         }
 
-        public Builder classDefault(TriState classDefault) {
+        public Builder classDefault(State classDefault) {
             this.classDefault = classDefault;
             return this;
         }
 
-        public Builder methodDefault(TriState methodDefault) {
+        public Builder methodDefault(State methodDefault) {
             this.methodDefault = methodDefault;
             return this;
         }
 
-        public Builder fieldDefault(TriState fieldDefault) {
+        public Builder fieldDefault(State fieldDefault) {
             this.fieldDefault = fieldDefault;
             return this;
         }

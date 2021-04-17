@@ -6,10 +6,6 @@ import com.sun.tools.javac.tree.TreeTranslator;
 import org.transparent.lucent.transform.LucentTranslator;
 import org.transparent.lucent.transform.LucentValidator;
 
-import java.lang.annotation.Annotation;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
  * This implementation of a {@link TreeTranslator} stores a {@link LucentTranslator}
  * and filters through annotated elements so that manual filtering doesn't need to be done.
@@ -20,28 +16,30 @@ import java.util.stream.Collectors;
  */
 // TODO: Document methods
 public final class FilteringTranslator extends TreeTranslator {
-    protected final LucentTranslator translator;
-    protected final LucentValidator validator;
+    private final LucentTranslator translator;
+    private final LucentValidator validator;
+    private final boolean filterMembers;
 
     public FilteringTranslator(
             LucentTranslator translator,
-            LucentValidator validator) {
+            LucentValidator validator, boolean filterMembers) {
         this.translator = translator;
         this.validator = validator;
+        this.filterMembers = filterMembers;
     }
 
     public void filter(JCTree tree) {
-        if (tree instanceof JCClassDecl) {
-            final JCClassDecl clazz = (JCClassDecl) tree;
-            filterClass(clazz);
-            for (JCTree def : clazz.defs)
-                filterMember(def);
-        }
+        if (tree instanceof JCClassDecl)
+            filterClass((JCClassDecl) tree);
     }
 
     private void filterClass(JCClassDecl clazz) {
-        if (validator.validateClass(clazz))
+        if (validator.validate(clazz)) {
             clazz.accept(translator);
+            if (filterMembers) {
+                clazz.defs.forEach(this::filterMember);
+            }
+        }
     }
 
     private void filterMember(JCTree tree) {

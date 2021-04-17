@@ -1,7 +1,7 @@
 package org.transparent.lucent.util;
 
 // TODO: Document
-public enum TriState {
+public enum State {
     TRUE,
     FALSE,
     NONE,
