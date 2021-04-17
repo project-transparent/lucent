@@ -17,6 +17,8 @@ import com.sun.tools.javac.tree.JCTree.*;
  * @since 1.0.0
  */
 public interface LucentValidator {
+    boolean validate(JCTree tree);
+
     /**
      * Validates a type declaration.
      * <p>

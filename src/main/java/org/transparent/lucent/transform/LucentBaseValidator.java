@@ -1,5 +1,6 @@
 package org.transparent.lucent.transform;
 
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 
 /**
@@ -13,6 +14,10 @@ import com.sun.tools.javac.tree.JCTree.*;
  * @since 1.0.0
  */
 public class LucentBaseValidator implements LucentValidator {
+    /** {@inheritDoc} */
+    @Override
+    public boolean validate(JCTree tree) { return true; }
+
     /** {@inheritDoc} */
     @Override
     public boolean validateClass(JCClassDecl clazz) {

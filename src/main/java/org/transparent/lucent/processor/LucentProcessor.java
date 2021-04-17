@@ -8,9 +8,10 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Names;
 import org.transparent.lucent.transform.LucentTranslator;
 import org.transparent.lucent.transform.LucentValidator;
-import org.transparent.lucent.util.FilteringTranslator;
+import org.transparent.lucent.util.filter.FilteringTranslator;
 import org.transparent.lucent.util.TriFunction;
 import org.transparent.lucent.util.TypeKind;
+import org.transparent.lucent.util.filter.FilteringValidator;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -93,8 +94,9 @@ public abstract class LucentProcessor extends AbstractProcessor {
                     final JCTree tree = (JCTree) trees.getTree(element);
                     preTranslate(tree, element, translator);
                     if (filterTrees()) {
-                        new FilteringTranslator(getSupportedAnnotations(), translator)
-                                .filter(tree);
+                        new FilteringTranslator(translator,
+                                getFilterValidator(getSupportedAnnotations())
+                        ).filter(tree);
                     } else {
                         tree.accept(translator);
                     }
@@ -193,6 +195,18 @@ public abstract class LucentProcessor extends AbstractProcessor {
      */
     public LucentValidator getValidator() {
         return null;
+    }
+
+    // TODO: Document
+    public FilteringValidator getFilterValidator(Set<Class<? extends Annotation>> annotations) {
+        return getFilterValidator()
+                .annotations(annotations)
+                .build();
+    }
+
+    // TODO: Document
+    public FilteringValidator.Builder getFilterValidator() {
+        return new FilteringValidator.Builder();
     }
 
     /**
