@@ -26,7 +26,7 @@ import javax.lang.model.element.Element;
  * @since 1.0.0
  */
 public abstract class LucentTranslator extends TreeTranslator {
-    protected LucentValidator validator;
+    protected final LucentValidator validator;
     protected final Names names;
     protected final TreeMaker factory;
 

@@ -45,21 +45,10 @@ import static org.transparent.lucent.util.CollectionsUtil.*;
  * @since 1.0.0
  */
 public abstract class LucentProcessor extends AbstractProcessor {
-    private final Set<TypeKind> kinds;
-    private LucentTranslator translator;
-    private LucentValidator validator;
-
     protected Trees trees;
     protected Context context;
     protected TreeMaker factory;
     protected Names names;
-
-    /**
-     * Initializes all per-processor values.
-     */
-    public LucentProcessor() {
-        kinds = getSupportedTypeKinds();
-    }
 
     @Override
     public synchronized void init(ProcessingEnvironment env) {
@@ -69,8 +58,6 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 .getContext();
         factory = TreeMaker.instance(context);
         names = Names.instance(context);
-        translator = getTranslator();
-        validator = getValidator();
     }
 
     /**
@@ -101,16 +88,18 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 env.getRootElements();
         for (Element element : elements) {
             if (supported(element.getKind())) {
-                final JCTree tree = (JCTree) trees.getTree(element);
-                preTranslate(tree, element, translator);
-                if (translator != null)
+                final LucentTranslator translator = getTranslator();
+                if (translator != null) {
+                    final JCTree tree = (JCTree) trees.getTree(element);
+                    preTranslate(tree, element, translator);
                     if (filterTrees()) {
                         new FilteringTranslator(getSupportedAnnotations(), translator)
                                 .filter(tree);
                     } else {
                         tree.accept(translator);
                     }
-                postTranslate(tree, element, translator);
+                    postTranslate(tree, element, translator);
+                }
             }
         }
         return false;
@@ -129,7 +118,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
                 .valueOf(kind)
                 .orElse(null);
         if (type != null)
-            return kinds
+            return getSupportedTypeKinds()
                     .contains(type);
         return false;
     }
@@ -147,6 +136,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
      * @param element the current root element
      * @param translator this processor's instance of {@link LucentTranslator}
      */
+    @SuppressWarnings("unused")
     @Hook
     protected void preTranslate(JCTree tree, Element element, LucentTranslator translator) {}
 
@@ -157,6 +147,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
      * @param element the current root element
      * @param translator this processor's instance of {@link LucentTranslator}
      */
+    @SuppressWarnings("unused")
     @Hook
     protected void postTranslate(JCTree tree, Element element, LucentTranslator translator) {}
 
@@ -217,7 +208,7 @@ public abstract class LucentProcessor extends AbstractProcessor {
             TriFunction<Names, TreeMaker,
                     LucentValidator,
                     LucentTranslator> constructor) {
-        return constructor.apply(names, factory, validator);
+        return constructor.apply(names, factory, getValidator());
     }
 
     /**
